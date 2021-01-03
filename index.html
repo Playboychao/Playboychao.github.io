@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        /* 清除默认样式 */
+        body {
+            padding: 0px;
+            margin: 0px;
+        }
+        /* 满屏 */
+        html {
+            overflow: hidden;
+        }		
+        #can1{
+            background:url(./001.png) 100% 100% no-repeat;
+            background-position: center;
+        }
+    </style>
+</head>
+<body>
+    <canvas id='can1' ></canvas>
+
+    <script>
+        window.onload = function() {
+            //首先定义显示字符串
+            var str = "01";
+            // 1. 获取画布
+            var canvas = document.getElementsByTagName("canvas")[0];
+            // 2. 获取浏览器加载时的宽高
+            var W = window.innerWidth;
+            var H = window.innerHeight;
+            // 3. 将浏览器宽高 赋值给画布
+            canvas.width = W;
+            canvas.height = H;
+            // 4. 获取画布内容
+            var context = canvas.getContext("2d");
+            // 5. 定义字体大小
+            var fontSize = 16;
+            // 6. 定义 浏览器能放下多少列 总宽度/字体宽度 向下取整
+            var colums = Math.floor(W / fontSize);
+            // 7. 定义一个数组 把每一列放入数组
+            var drops = [];
+            // 遍历每一列 给每一列定义Y轴开始位置
+            for (let i = 0; i < colums; i++) {
+                drops.push(0);
+            }
+            // 字体变化方法
+            function draw() {
+                // 设置字体大小 加粗 字体
+                context.font = "blod" + fontSize + "px 楷体";
+                // 1. 画布 透明 显示
+                context.fillStyle = "rgba(0,0,0,0.05)";
+                // 2. 设置矩形框渐变
+                context.fillRect(0, 0, W, H);
+                // X坐标 Y坐标 width height
+                // 3.从透明到有颜色
+                context.fillStyle = "green";
+                // 4. 遍历 让每一列的字符、位置  随机出现
+                for (let i = 0; i < colums; i++) {
+                    //1. 把每个字符输出到页面
+                    context.fillText(str[index], x, y);
+                    // text 输出的文本  X轴开始位置 Y轴开始位置
+                    //2. 定义下标 下标向下取整的随机数 随机数小于字符的长度
+                    var index = Math.floor(Math.random() * str.length);
+                    //3. x轴开始位置 从左到右 间隔是字体大小
+                    var x = i * fontSize;
+                    //4. y轴开始位置 从上到下 间隔是字体大小 Y轴开始位置随机
+                    var y = drops[i] * fontSize;
+                    //5. 每一列的开始位置加间隔
+                    drops[i]++;
+                    //6. 判断从头开始
+                    // 如果 Y轴的开始位置 大于 画布的高度 随机数大于 99
+                    // 小概率 达到条件的列 从回初始
+                    if (y >= canvas.height && Math.random() > 0.99) {
+                        // 每一列 回到初始值 0
+                        drops[i] = 0;
+                    }
+                }
+            }
+            // 调用方法
+            draw();
+            // 定时器 
+            setInterval(draw, 30);
+        }
+    </script>
+</body>
+
+</html>
